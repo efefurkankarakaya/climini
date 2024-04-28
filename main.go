@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
@@ -11,8 +12,6 @@ import (
 )
 
 func main() {
-	var prompt string
-
 	ctx := context.Background()
 
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
@@ -27,7 +26,8 @@ func main() {
 
 	for {
 		fmt.Printf("Prompt: ")
-		_, err = fmt.Scan(&prompt)
+		in := bufio.NewReader(os.Stdin)
+		prompt, err := in.ReadString('\n')
 
 		if err != nil {
 			log.Fatal(err)
@@ -39,8 +39,11 @@ func main() {
 			log.Fatal(err)
 		}
 
+		fmt.Println(prompt)
+		fmt.Println(len(res.Candidates))
 		for i := 0; i < len(res.Candidates); i++ {
 			for j := 0; j < len(res.Candidates[i].Content.Parts); j++ {
+				fmt.Println(len(res.Candidates[i].Content.Parts))
 				fmt.Println(res.Candidates[i].Content.Parts[j])
 			}
 		}
