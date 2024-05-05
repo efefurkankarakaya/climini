@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
+	processor "climini/internal/processor"
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -12,6 +11,8 @@ import (
 )
 
 func main() {
+	processor.ReadArguments()
+
 	ctx := context.Background()
 
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
@@ -24,28 +25,30 @@ func main() {
 
 	model := client.GenerativeModel("gemini-pro")
 
-	for {
-		fmt.Printf("Prompt: ")
-		in := bufio.NewReader(os.Stdin)
-		prompt, err := in.ReadString('\n')
+	processor.StartASinglePromptSession(ctx, model)
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	// for {
+	// 	fmt.Printf("Prompt: ")
+	// 	in := bufio.NewReader(os.Stdin)
+	// 	prompt, err := in.ReadString('\n')
 
-		res, err := model.GenerateContent(ctx, genai.Text(prompt))
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	// 	res, err := model.GenerateContent(ctx, genai.Text(prompt))
 
-		fmt.Println(prompt)
-		fmt.Println(len(res.Candidates))
-		for i := 0; i < len(res.Candidates); i++ {
-			for j := 0; j < len(res.Candidates[i].Content.Parts); j++ {
-				fmt.Println(len(res.Candidates[i].Content.Parts))
-				fmt.Println(res.Candidates[i].Content.Parts[j])
-			}
-		}
-	}
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+
+	// 	fmt.Println(prompt)
+	// 	fmt.Println(len(res.Candidates))
+	// 	for i := 0; i < len(res.Candidates); i++ {
+	// 		for j := 0; j < len(res.Candidates[i].Content.Parts); j++ {
+	// 			fmt.Println(len(res.Candidates[i].Content.Parts))
+	// 			fmt.Println(res.Candidates[i].Content.Parts[j])
+	// 		}
+	// 	}
+	// }
 }
