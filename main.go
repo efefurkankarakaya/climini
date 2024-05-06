@@ -25,7 +25,8 @@ func main() {
 
 	model := client.GenerativeModel("gemini-pro")
 
-	processor.StartASinglePromptSession(ctx, model)
+	// processor.StartASinglePromptSession(ctx, model)
+	processor.StartTurnBasedPromptSession(ctx, model)
 
 	// for {
 	// 	fmt.Printf("Prompt: ")
